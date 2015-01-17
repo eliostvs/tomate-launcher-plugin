@@ -1,0 +1,11 @@
+dbus-x11
+gir1.2-unity-5.0
+python-blinker
+python-coverage
+python-enum34
+python-gi
+python-mock
+python-nose
+python-paver
+python-xdg
+python-yapsy
