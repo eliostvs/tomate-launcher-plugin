@@ -19,9 +19,11 @@ class LauncherPlugin(TomatePlugin):
         ('timer_updated', 'on_timer_updated'),
     )
 
+    @suppress_errors
     def on_init(self):
         self.launcher = Unity.LauncherEntry.get_for_desktop_id('tomate-gtk.desktop')
 
+    @suppress_errors
     def on_deactivate(self):
         self.launcher.set_property('progress_visible', False)
         self.launcher.set_property('count_visible', False)
