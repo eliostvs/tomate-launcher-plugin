@@ -1,7 +1,7 @@
 Tomate Launcher Plugin
 ======================
 
-Tomate Plugin. Shows session progress and sessions counter in unity launcher.
+Tomate plugin that shows the session progress and counter in launcher.
 
 Installation
 ------------

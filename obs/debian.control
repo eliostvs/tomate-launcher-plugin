@@ -16,4 +16,4 @@ Depends: ${misc:Depends},
  gir1.2-unity-5.0,
  python-gi,
  tomate-gtk
-Description: Tomate Plugin. Shows session progress and sessions counter in unity launcher.
+Description: Tomate plugin that shows the session progress and counter in launcher.
