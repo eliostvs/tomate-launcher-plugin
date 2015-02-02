@@ -10,6 +10,7 @@ class LauncherPluginTestCase(unittest.TestCase):
 
     def setUp(self):
         from launcher_plugin import LauncherPlugin
+
         self.plugin = LauncherPlugin()
         self.plugin.application = Mock()
 
@@ -29,7 +30,9 @@ class LauncherPluginTestCase(unittest.TestCase):
         mset_property.assert_any_call('count_visible', True)
 
     def test_should_show_progress_whem_activate_and_pomodoro_is_running(self, mset_property):
-        self.plugin.application.status.return_value = {'pomodoro': {'progress': 0.2, 'state': 'running'}}
+        from tomate.constants import State
+
+        self.plugin.application.status.return_value = {'pomodoro': {'progress': 0.2, 'state': State.running}}
         self.plugin.activate()
 
         mset_property.assert_any_call('progress_visible', True)

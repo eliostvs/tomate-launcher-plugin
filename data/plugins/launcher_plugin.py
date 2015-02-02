@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 import logging
 
 from gi.repository import Unity
+
 from tomate.plugin import TomatePlugin
 from tomate.utils import suppress_errors
+from tomate.constants import State
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class LauncherPlugin(TomatePlugin):
     def on_activate(self):
         pomodoro = self.application.status()['pomodoro']
 
-        if pomodoro['state'] == 'running':
+        if pomodoro['state'] == State.running:
             self.enable_progress()
 
         else:
