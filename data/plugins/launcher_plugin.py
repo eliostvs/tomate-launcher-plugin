@@ -12,9 +12,10 @@ logger = logging.getLogger(__name__)
 class LauncherPlugin(TomatePlugin):
 
     signals = (
+        ('session_ended', 'on_session_ended'),
+        ('session_interrupted', 'on_session_ended'),
         ('session_started', 'on_session_started'),
         ('timer_updated', 'update_progress'),
-        ('session_ended', 'on_session_ended'),
     )
 
     @suppress_errors
@@ -23,8 +24,14 @@ class LauncherPlugin(TomatePlugin):
 
     @suppress_errors
     def on_activate(self):
-        self.enable_count()
-        self.update_count()
+        pomodoro = self.application.status()['pomodoro']
+
+        if pomodoro['state'] == 'running':
+            self.enable_progress()
+
+        else:
+            self.enable_count()
+            self.update_count(**pomodoro)
 
     @suppress_errors
     def on_deactivate(self):
