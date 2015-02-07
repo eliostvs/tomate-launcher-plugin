@@ -1,5 +1,4 @@
 #!/bin/env python
-
 import os
 
 from paver.easy import needs, path, sh
@@ -22,8 +21,10 @@ def default():
 
 
 @task
-def install():
-    sh('cat packages.txt | sudo xargs apt-get -y --force-yes install')
+@needs(['clean'])
+def test(options):
+    os.environ['PYTHONPATH'] = '%s:%s' % (TOMATE_PATH, PLUGIN_PATH)
+    sh('nosetests --cover-erase --with-coverage tests.py')
 
 
 @task
@@ -34,10 +35,14 @@ def clean():
 
 
 @task
-@needs(['clean'])
-def test(options):
-    os.environ['PYTHONPATH'] = '%s:%s' % (TOMATE_PATH, PLUGIN_PATH)
-    sh('nosetests --cover-erase --with-coverage tests.py')
+@needs(['docker_rmi', 'docker_build', 'docker_run'])
+def docker_test():
+    pass
+
+
+@task
+def docker_rmi():
+    sh('docker rmi eliostvs/tomate-launcher-plugin', ignore_error=True)
 
 
 @task
