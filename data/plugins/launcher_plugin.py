@@ -26,7 +26,7 @@ class LauncherPlugin(TomatePlugin):
 
     @suppress_errors
     def on_activate(self):
-        pomodoro = self.application.status()['pomodoro']
+        pomodoro = self.app.status()['pomodoro']
 
         if pomodoro['state'] == State.running:
             self.enable_progress()

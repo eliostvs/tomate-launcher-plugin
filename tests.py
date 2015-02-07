@@ -12,7 +12,7 @@ class LauncherPluginTestCase(unittest.TestCase):
         from launcher_plugin import LauncherPlugin
 
         self.plugin = LauncherPlugin()
-        self.plugin.application = Mock()
+        self.plugin.app = Mock()
 
     @patch('gi.repository.Unity.LauncherEntry.get_for_desktop_id')
     def test_should_get_tomate_desktop_id(self, mget_for_desktop_id, *args):
@@ -23,7 +23,7 @@ class LauncherPluginTestCase(unittest.TestCase):
         mget_for_desktop_id.assert_called_with('tomate-gtk.desktop')
 
     def test_should_show_count_when_activate_and_pomodoro_is_stopped(self, mset_property):
-        self.plugin.application.status.return_value = {'pomodoro': {'sessions': 2, 'state': 'stopped'}}
+        self.plugin.app.status.return_value = {'pomodoro': {'sessions': 2, 'state': 'stopped'}}
         self.plugin.activate()
 
         mset_property.assert_any_call('count', 2)
@@ -32,7 +32,7 @@ class LauncherPluginTestCase(unittest.TestCase):
     def test_should_show_progress_whem_activate_and_pomodoro_is_running(self, mset_property):
         from tomate.constants import State
 
-        self.plugin.application.status.return_value = {'pomodoro': {'progress': 0.2, 'state': State.running}}
+        self.plugin.app.status.return_value = {'pomodoro': {'progress': 0.2, 'state': State.running}}
         self.plugin.activate()
 
         mset_property.assert_any_call('progress_visible', True)
