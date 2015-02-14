@@ -1,0 +1,9 @@
+[Core]
+Name = Launcher
+Module = launcher_plugin
+
+[Documentation]
+Author = Elio Esteves Duarte
+Version = 0.1.0
+Website = https://github.com/eliostvs/tomate-launcher-plugin
+Description = Shows session progress and counter in launcher
