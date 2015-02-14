@@ -15,22 +15,6 @@ sudo bash -c "echo 'deb http://download.opensuse.org/repositories/home:/eliostvs
 sudo apt-get update && sudo apt-get install tomate-launcher-plugin
 ```
 
-### Opensuse (13.2)
-
-```
-RELEASE=`cat /etc/SuSE-release | sed -n "s/VERSION = \(.*\)$/\1/p"`
-sudo zypper ar -f http://download.opensuse.org/repositories/home:/eliostvs:/tomate/openSUSE_$RELEASE/home:eliostvs:tomate.repo
-sudo zypper install tomate-launcher-plugin
-```
-
-## Fedora (20, 21)
-
-```
-RELEASE=`cat /etc/fedora-release | grep -o '[0-9][0-9]*'`
-sudo yum-config-manager --add-repo http://download.opensuse.org/repositories/home:/eliostvs:/tomate/Fedora_$RELEASE/home:eliostvs:tomate.repo
-sudo yum install tomate-launcher-plugin
-```
-
 License
 -------
 
