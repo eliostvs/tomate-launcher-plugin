@@ -31,7 +31,7 @@ def test(options):
 def clean():
     sh('pyclean data/plugin')
     sh('pyclean .')
-    sh('rm .coverage', ignore_error=True)
+    sh('rm -f .coverage', ignore_error=True)
 
 
 @task
