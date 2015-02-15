@@ -18,6 +18,7 @@ class LauncherPlugin(TomatePlugin):
         ('session_interrupted', 'on_session_ended'),
         ('session_started', 'on_session_started'),
         ('timer_updated', 'update_progress'),
+        ('sessions_reseted', 'update_count'),
     )
 
     @suppress_errors
