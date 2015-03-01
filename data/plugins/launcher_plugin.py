@@ -3,17 +3,16 @@ from __future__ import unicode_literals
 import logging
 
 from gi.repository import Unity
-
-from tomate.plugin import TomatePlugin
+from tomate.enums import State
+from tomate.plugin import Plugin
 from tomate.utils import suppress_errors
-from tomate.constants import State
 
 logger = logging.getLogger(__name__)
 
 
-class LauncherPlugin(TomatePlugin):
+class LauncherPlugin(Plugin):
 
-    signals = (
+    subscriptions = (
         ('session_ended', 'on_session_ended'),
         ('session_interrupted', 'on_session_ended'),
         ('session_started', 'on_session_started'),
