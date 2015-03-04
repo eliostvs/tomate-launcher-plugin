@@ -4,6 +4,7 @@ import logging
 
 from gi.repository import Unity
 from tomate.enums import State
+from tomate.graph import graph
 from tomate.plugin import Plugin
 from tomate.utils import suppress_errors
 
@@ -21,60 +22,59 @@ class LauncherPlugin(Plugin):
     )
 
     @suppress_errors
-    def on_init(self):
+    def __init__(self):
+        super(LauncherPlugin, self).__init__()
+
         self.launcher = Unity.LauncherEntry.get_for_desktop_id('tomate-gtk.desktop')
+        self.session = graph.get('tomate.session')
 
     @suppress_errors
-    def on_activate(self):
-        pomodoro = self.app.status()['pomodoro']
+    def activate(self):
+        super(LauncherPlugin, self).activate()
 
-        if pomodoro['state'] == State.running:
+        if self.session.status()['state'] == State.running:
             self.enable_progress()
 
         else:
             self.enable_count()
-            self.update_count(**pomodoro)
+            self.update_count(**self.session.status())
 
     @suppress_errors
-    def on_deactivate(self):
+    def deactivate(self):
+        super(LauncherPlugin, self).deactivate()
+
         self.disable_count()
         self.disable_progress()
 
     def on_session_started(self, *args, **kwargs):
-        self.disable_count(*args, **kwargs)
-        self.enable_progress(*args, **kwargs)
+        self.disable_count()
+        self.enable_progress()
 
     def on_session_ended(self, *args, **kwargs):
-        self.disable_progress(*args, **kwargs)
-        self.enable_count(*args, **kwargs)
-        self.update_count(*args, **kwargs)
+        self.disable_progress()
+        self.enable_count()
+        self.update_count(**kwargs)
 
-    @suppress_errors
-    def enable_progress(self, *args, **kwargs):
+    def enable_progress(self):
         self.launcher.set_property('progress', 0)
         self.launcher.set_property('progress_visible', True)
 
-    @suppress_errors
-    def disable_progress(self, *args, **kwargs):
+    def disable_progress(self):
         self.launcher.set_property('progress_visible', False)
 
-    @suppress_errors
-    def update_progress(self, *args, **kwargs):
+    def update_progress(self, **kwargs):
         time_ratio = kwargs.get('time_ratio', 0)
         self.launcher.set_property('progress', time_ratio)
 
         logger.debug('luncher progress update to %.1f', time_ratio)
 
-    @suppress_errors
-    def enable_count(self, *args, **kwargs):
+    def enable_count(self):
         self.launcher.set_property('count_visible', True)
 
-    @suppress_errors
-    def disable_count(self, *args, **kwargs):
+    def disable_count(self):
         self.launcher.set_property('count_visible', False)
 
-    @suppress_errors
-    def update_count(self, *args, **kwargs):
+    def update_count(self, **kwargs):
         sessions = kwargs.get('sessions', 0)
         self.launcher.set_property('count', sessions)
 
