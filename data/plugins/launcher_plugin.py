@@ -46,10 +46,12 @@ class LauncherPlugin(Plugin):
         self.disable_count()
         self.disable_progress()
 
+    @suppress_errors
     def on_session_started(self, *args, **kwargs):
         self.disable_count()
         self.enable_progress()
 
+    @suppress_errors
     def on_session_ended(self, *args, **kwargs):
         self.disable_progress()
         self.enable_count()
@@ -62,6 +64,7 @@ class LauncherPlugin(Plugin):
     def disable_progress(self):
         self.launcher.set_property('progress_visible', False)
 
+    @suppress_errors
     def update_progress(self, **kwargs):
         time_ratio = kwargs.get('time_ratio', 0)
         self.launcher.set_property('progress', time_ratio)
@@ -74,6 +77,7 @@ class LauncherPlugin(Plugin):
     def disable_count(self):
         self.launcher.set_property('count_visible', False)
 
+    @suppress_errors
     def update_count(self, **kwargs):
         sessions = kwargs.get('sessions', 0)
         self.launcher.set_property('count', sessions)
