@@ -13,5 +13,5 @@ Depends: ${misc:Depends},
  ${python:Depends},
  gir1.2-unity-5.0,
  python-gi,
- tomate-gtk
+ tomate-gtk (>= 0.3.0)
 Description: Tomate plugin that shows the session progress and counter in launcher.
