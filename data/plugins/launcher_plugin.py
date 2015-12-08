@@ -4,22 +4,16 @@ import logging
 
 from gi.repository import Unity
 from tomate.enums import State
+from tomate.events import Events, on
 from tomate.graph import graph
 from tomate.plugin import Plugin
 from tomate.utils import suppress_errors
+
 
 logger = logging.getLogger(__name__)
 
 
 class LauncherPlugin(Plugin):
-
-    subscriptions = (
-        ('session_ended', 'on_session_ended'),
-        ('session_interrupted', 'on_session_ended'),
-        ('session_started', 'on_session_started'),
-        ('timer_updated', 'update_progress'),
-        ('sessions_reseted', 'update_count'),
-    )
 
     @suppress_errors
     def __init__(self):
@@ -47,11 +41,13 @@ class LauncherPlugin(Plugin):
         self.disable_progress()
 
     @suppress_errors
+    @on(Events.Session, [State.running])
     def on_session_started(self, *args, **kwargs):
         self.disable_count()
         self.enable_progress()
 
     @suppress_errors
+    @on(Events.Session, [State.finished, State.stopped])
     def on_session_ended(self, *args, **kwargs):
         self.disable_progress()
         self.enable_count()
@@ -65,6 +61,7 @@ class LauncherPlugin(Plugin):
         self.launcher.set_property('progress_visible', False)
 
     @suppress_errors
+    @on(Events.Timer, [State.changed])
     def update_progress(self, *args, **kwargs):
         time_ratio = kwargs.get('time_ratio', 0)
         self.launcher.set_property('progress', time_ratio)
@@ -78,6 +75,7 @@ class LauncherPlugin(Plugin):
         self.launcher.set_property('count_visible', False)
 
     @suppress_errors
+    @on(Events.Session, [State.reset])
     def update_count(self, *args, **kwargs):
         sessions = kwargs.get('sessions', 0)
         self.launcher.set_property('count', sessions)
