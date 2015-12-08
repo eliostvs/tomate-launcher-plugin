@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 import logging
 
 from gi.repository import Unity
-from tomate.enums import State
-from tomate.events import Events, on
+
+from tomate.constant import State
+from tomate.event import Events, on
 from tomate.graph import graph
 from tomate.plugin import Plugin
 from tomate.utils import suppress_errors
@@ -26,7 +27,7 @@ class LauncherPlugin(Plugin):
     def activate(self):
         super(LauncherPlugin, self).activate()
 
-        if self.session.status()['state'] == State.running:
+        if self.session.status()['state'] == State.started:
             self.enable_progress()
 
         else:
@@ -41,7 +42,7 @@ class LauncherPlugin(Plugin):
         self.disable_progress()
 
     @suppress_errors
-    @on(Events.Session, [State.running])
+    @on(Events.Session, [State.started])
     def on_session_started(self, *args, **kwargs):
         self.disable_count()
         self.enable_progress()

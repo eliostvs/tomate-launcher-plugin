@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import unittest
 
 from mock import Mock, patch
-from tomate.enums import State
+from tomate.constant import State
 from tomate.graph import graph
 
 
@@ -29,7 +29,7 @@ class TestLauncherPlugin(unittest.TestCase):
         self.plugin.launcher.set_property.assert_any_call('count_visible', True)
 
     def test_should_show_progress_whem_activate_and_pomodoro_is_running(self):
-        self.plugin.session.status.return_value = {'state': State.running, 'sessions': 2}
+        self.plugin.session.status.return_value = {'state': State.started, 'sessions': 2}
         self.plugin.activate()
 
         self.plugin.launcher.set_property.assert_any_call('progress_visible', True)
