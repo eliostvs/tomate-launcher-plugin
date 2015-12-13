@@ -1,19 +1,10 @@
 Tomate Launcher Plugin
 ======================
 
-Tomate plugin that shows the session progress and counter in launcher.
-
-Installation
-------------
-
-### Ubuntu (14.04, 14.10)
-
-```
-RELEASE=`sed -n 's/VERSION_ID="\(.*\)"/\1/p' /etc/os-release`
-sudo wget -O- http://download.opensuse.org/repositories/home:/eliostvs:/tomate/xUbuntu_$RELEASE/Release.key | sudo apt-key add -
-sudo bash -c "echo 'deb http://download.opensuse.org/repositories/home:/eliostvs:/tomate/xUbuntu_$RELEASE/ ./' > /etc/apt/sources.list.d/tomate.list"
-sudo apt-get update && sudo apt-get install tomate-launcher-plugin
-```
+Tomate is a timer for the Pomodoro Techinique. 
+This plugin shows the session progress and the number of sessions in the Unity Launcher.
+It only works with the Unity window manager.
+You should install the [UI](https://github.com/eliostvs/tomate-gtk) first.
 
 License
 -------
