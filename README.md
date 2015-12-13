@@ -4,7 +4,11 @@ Tomate Launcher Plugin
 Tomate is a timer for the Pomodoro Techinique. 
 This plugin shows the session progress and the number of sessions in the Unity Launcher.
 It only works with the Unity window manager.
-You should install the [UI](https://github.com/eliostvs/tomate-gtk) first.
+
+Installation
+------------
+
+Go to [this page](https://github.com/eliostvs/tomate-gtk) for instructions.
 
 License
 -------
