@@ -1,10 +1,11 @@
 Source: tomate-launcher-plugin
 Section: python
 Priority: optional
-Build-Depends: debhelper (>= 8), python-all, python-setuptools
+Build-Depends: debhelper (>= 8), python-all, python-setuptools, python3-all, python3-setuptools
 Maintainer: Elio Esteves Duarte <elio.esteves.duarte@gmail.com>
 Standards-Version: 3.9.5
-X-Python-Version: >= 2.6
+X-Python-Version: >= 2.7
+X-Python-Version: >= 3.2
 Homepage: https://github.com/eliostvs/tomate-launcher-plugin
 
 Package: tomate-launcher-plugin
@@ -14,4 +15,17 @@ Depends: ${misc:Depends},
  gir1.2-unity-5.0,
  python-gi,
  tomate-gtk (>= 0.3.0)
-Description: Tomate plugin that shows the session progress and counter in launcher.
+Description: Tomate plugin that shows the session progress and counter in launcher
+.
+This package installs the library for Python 2.
+
+Package: tomate-launcher-plugin3
+Architecture: all
+Depends: ${misc:Depends},
+ ${python3:Depends},
+ gir1.2-unity-5.0,
+ python-gi,
+ tomate-gtk (>= 0.3.0)
+Description: Tomate plugin that shows the session progress and counter in launcher
+.
+This package installs the library for Python 3.
