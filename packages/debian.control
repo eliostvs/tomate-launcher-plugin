@@ -20,9 +20,8 @@ Depends: ${misc:Depends},
  gir1.2-unity-5.0,
  python-gi,
  tomate-gtk (>= 0.4.0)
-Description: Tomate plugin that shows the session progress and counter in launcher
-.
-This package installs the library for Python 2.
+Description: Tomate plugin that shows the session progress and counter in launcher.
+ This package installs the library for Python 2.
 
 Package: tomate-launcher-plugin3
 Architecture: all
@@ -31,6 +30,5 @@ Depends: ${misc:Depends},
  gir1.2-unity-5.0,
  python-gi,
  tomate-gtk (>= 0.4.0)
-Description: Tomate plugin that shows the session progress and counter in launcher
-.
-This package installs the library for Python 3.
+Description: Tomate plugin that shows the session progress and counter in launcher.
+ This package installs the library for Python 3.
