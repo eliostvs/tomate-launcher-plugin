@@ -3,13 +3,11 @@ from __future__ import unicode_literals
 import unittest
 
 from mock import Mock, patch
-
+from tomate.constant import State
 from tomate.graph import graph
-from tomate.enums import State
-from tomate.tests import SubscriptionMixin
 
 
-class TestLauncherPlugin(SubscriptionMixin, unittest.TestCase):
+class TestLauncherPlugin(unittest.TestCase):
 
     @patch('gi.repository.Unity.LauncherEntry')
     def setUp(self, launcher_entry):
@@ -19,9 +17,6 @@ class TestLauncherPlugin(SubscriptionMixin, unittest.TestCase):
 
         self.plugin = LauncherPlugin()
         self.launcher_entry = launcher_entry
-
-    def create_instance(self):
-        return self.plugin
 
     def test_get_tomate_desktop_id(self):
         self.launcher_entry.get_for_desktop_id.assert_called_with('tomate-gtk.desktop')
@@ -34,7 +29,7 @@ class TestLauncherPlugin(SubscriptionMixin, unittest.TestCase):
         self.plugin.launcher.set_property.assert_any_call('count_visible', True)
 
     def test_should_show_progress_whem_activate_and_pomodoro_is_running(self):
-        self.plugin.session.status.return_value = {'state': State.running, 'sessions': 2}
+        self.plugin.session.status.return_value = {'state': State.started, 'sessions': 2}
         self.plugin.activate()
 
         self.plugin.launcher.set_property.assert_any_call('progress_visible', True)

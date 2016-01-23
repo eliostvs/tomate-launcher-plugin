@@ -1,16 +1,13 @@
-FROM ubuntu:14.04
+FROM eliostvs/tomate
 
-RUN apt-get install -y -qq wget
+ENV PROJECT /code/
 
-RUN wget -O- http://download.opensuse.org/repositories/home:/eliostvs:/tomate/xUbuntu_14.04/Release.key | apt-key add -
-RUN echo 'deb http://download.opensuse.org/repositories/home:/eliostvs:/tomate/xUbuntu_14.04/ ./' > /etc/apt/sources.list.d/tomate.list
+COPY ./ $PROJECT
 
-COPY ./ /code/
+RUN apt-get update -qq && apt-get -yqq install dbus-x11 gir1.2-unity-5.0
 
-RUN apt-get update -qq && cat /code/packages.txt | xargs apt-get -yqq install
+WORKDIR $PROJECT
 
-WORKDIR /code/
-
-ENTRYPOINT ["paver"]
+ENTRYPOINT ["make"]
 
 CMD ["test"]
