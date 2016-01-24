@@ -45,6 +45,6 @@ setup(
     name='tomate-launcher-plugin',
     data_files=find_data_files(DATA_FILES, 'tomate'),
     url='https://github.com/eliostvs/tomate-launcher-plugin',
-    version='0.4.1',
+    version='0.5.0',
     zip_safe=False,
 )
