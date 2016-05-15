@@ -20,7 +20,7 @@ Change Logs
 ### 0.6.0
 
 - Using py.test
-- Fix gi.require_version warning
+- Fix gtk warnings
 
 ### 0.5.0
 
