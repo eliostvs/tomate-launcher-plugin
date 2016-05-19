@@ -2,6 +2,10 @@ from __future__ import unicode_literals
 
 import logging
 
+import gi
+
+gi.require_version('Unity', '7.0')
+
 from gi.repository import Unity
 
 import tomate.plugin

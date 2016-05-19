@@ -1,9 +1,8 @@
 Tomate Launcher Plugin
 ======================
 
-Tomate is a timer for the Pomodoro Techinique. 
-This plugin shows the session progress and the number of sessions in the Unity Launcher.
-It only works with the Unity window manager.
+Tomate is a timer for the Pomodoro Techinique.
+This plugin shows the timer countdown and the number of sessions in the Unity launcher.
 
 Installation
 ------------
@@ -15,14 +14,19 @@ Bugs and Suggetions
 
 Bugs and suggestions should be reported [here](https://github.com/eliostvs/tomate-alarm-plugin/issues).
 
-Changelog
----------
+Change Logs
+-----------
 
-### v0.5.0
+### 0.6.0
+
+- Using py.test
+- Fix gtk warnings
+
+### 0.5.0
 
 - Remove linux package metadata
 
-### v0.4.0
+### 0.4.0
 
 - Using the new event system
 
