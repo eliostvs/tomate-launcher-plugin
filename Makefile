@@ -7,7 +7,7 @@ PLUGIN_PATH = $(DATA_PATH)/plugins
 PYTHONPATH = PYTHONPATH=$(TOMATE_PATH):$(PLUGIN_PATH)
 DOCKER_IMAGE_NAME = $(AUTHOR)/$(PACKAGE)
 PROJECT = home:eliostvs:tomate
-DEBUG=TOMATE_DEBUG=true
+DEBUG = TOMATE_DEBUG=true
 OBS_API_URL = https://api.opensuse.org:443/trigger/runservice?project=$(PROJECT)&package=$(PACKAGE)
 
 submodule:
@@ -36,7 +36,7 @@ docker-all: docker-clean docker-build docker-test
 
 docker-enter:
 	docker run --rm -v $(PACKAGE_ROOT):/code -it --entrypoint="bash" $(DOCKER_IMAGE_NAME)
-	
+
 docker-lint:
 	docker run --rm -v $(PACKAGE_ROOT):/code $(DOCKER_IMAGE_NAME) lint
 
