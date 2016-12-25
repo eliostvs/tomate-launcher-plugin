@@ -44,13 +44,13 @@ class LauncherPlugin(tomate.plugin.Plugin):
         self.disable_progress()
 
     @suppress_errors
-    @on(Events['Session'], [State.started])
+    @on(Events.Session, [State.started])
     def on_session_started(self, *args, **kwargs):
         self.disable_count()
         self.enable_progress()
 
     @suppress_errors
-    @on(Events['Session'], [State.finished, State.stopped])
+    @on(Events.Session, [State.finished, State.stopped])
     def on_session_ended(self, *args, **kwargs):
         self.disable_progress()
         self.enable_count()
@@ -64,7 +64,7 @@ class LauncherPlugin(tomate.plugin.Plugin):
         self.launcher.set_property('progress_visible', False)
 
     @suppress_errors
-    @on(Events['Timer'], [State.changed])
+    @on(Events.Timer, [State.changed])
     def update_progress(self, *args, **kwargs):
         time_ratio = kwargs.get('time_ratio', 0)
         self.launcher.set_property('progress', time_ratio)
@@ -78,7 +78,7 @@ class LauncherPlugin(tomate.plugin.Plugin):
         self.launcher.set_property('count_visible', False)
 
     @suppress_errors
-    @on(Events['Session'], [State.reset])
+    @on(Events.Session, [State.reset])
     def update_count(self, *args, **kwargs):
         sessions = kwargs.get('sessions', 0)
         self.launcher.set_property('count', sessions)
