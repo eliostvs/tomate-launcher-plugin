@@ -9,6 +9,7 @@ DOCKER_IMAGE_NAME = $(AUTHOR)/$(PACKAGE)
 PROJECT = home:eliostvs:tomate
 DEBUG = TOMATE_DEBUG=true
 OBS_API_URL = https://api.opensuse.org:443/trigger/runservice?project=$(PROJECT)&package=$(PACKAGE)
+WORK_DIR = /code
 
 submodule:
 	git submodule init
@@ -18,10 +19,7 @@ clean:
 	find . \( -iname "*.pyc" -o -iname "__pycache__" \) -print0 | xargs -0 rm -rf
 
 test: clean
-	$(PYTHONPATH) $(DEBUG) py.test tests.py --cov=$(PLUGIN_PATH)
-
-lint:
-	flake8
+	$(PYTHONPATH) $(DEBUG) py.test test_plugin.py --cov=$(PLUGIN_PATH)
 
 docker-clean:
 	docker rmi $(DOCKER_IMAGE_NAME) 2> /dev/null || echo $(DOCKER_IMAGE_NAME) not found!
@@ -35,10 +33,7 @@ docker-test:
 docker-all: docker-clean docker-build docker-test
 
 docker-enter:
-	docker run --rm -v $(PACKAGE_ROOT):/code -it --entrypoint="bash" $(DOCKER_IMAGE_NAME)
-
-docker-lint:
-	docker run --rm -v $(PACKAGE_ROOT):/code $(DOCKER_IMAGE_NAME) lint
+	docker run --rm -v $(PACKAGE_ROOT):$(WORK_DIR) --workdir $(WORK_DIR) -it --entrypoint="bash" $(DOCKER_IMAGE_NAME)
 
 trigger-build:
 	curl -X POST -H "Authorization: Token $(TOKEN)" $(OBS_API_URL)
