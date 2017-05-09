@@ -14,12 +14,10 @@ from tomate.event import Events, on
 from tomate.graph import graph
 from tomate.utils import suppress_errors
 
-
 logger = logging.getLogger(__name__)
 
 
 class LauncherPlugin(tomate.plugin.Plugin):
-
     @suppress_errors
     def __init__(self):
         super(LauncherPlugin, self).__init__()
