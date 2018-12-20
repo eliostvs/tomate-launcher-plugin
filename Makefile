@@ -11,6 +11,10 @@ DEBUG = TOMATE_DEBUG=true
 OBS_API_URL = https://api.opensuse.org:443/trigger/runservice?project=$(PROJECT)&package=$(PACKAGE)
 WORK_DIR = /code
 
+submodule:
+	git submodule init;
+	git submodule update;
+
 clean:
 	find . \( -iname "*.pyc" -o -iname "__pycache__" \) -print0 | xargs -0 rm -rf
 
