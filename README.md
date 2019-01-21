@@ -19,7 +19,9 @@ Changelog
 
 ### [Unreleased]
 
-- Using new session/task API
+#### Changed
+
+- The timer, session and settings now emit a payload object instead of a dictionary
 
 ### 0.7.0
 
