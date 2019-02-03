@@ -14,8 +14,14 @@ Bugs and Suggestions
 
 Bugs and suggestions should be reported [here](https://github.com/eliostvs/tomate-alarm-plugin/issues).
 
-Change Logs
------------
+Changelog
+---------
+
+### 0.8.0
+
+#### Changed
+
+- The timer, session and settings now emit a payload object instead of a dictionary
 
 ### 0.7.0
 
