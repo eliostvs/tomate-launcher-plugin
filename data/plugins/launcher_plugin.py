@@ -2,23 +2,21 @@ import logging
 
 import gi
 
-from tomate.timer import TimerPayload
-
 gi.require_version("Unity", "7.0")
 
 from gi.repository import Unity
 
-import tomate.plugin
-from tomate.constant import State
-from tomate.event import Events, on
-from tomate.graph import graph
-from tomate.utils import suppress_errors
-from tomate.session import SessionPayload, Session
+from tomate.pomodoro import State
+from tomate.pomodoro.event import Events, on
+from tomate.pomodoro.graph import graph
+from tomate.pomodoro.plugin import suppress_errors, Plugin
+from tomate.pomodoro.session import SessionPayload, Session
+from tomate.pomodoro.timer import TimerPayload
 
 logger = logging.getLogger(__name__)
 
 
-class LauncherPlugin(tomate.plugin.Plugin):
+class LauncherPlugin(Plugin):
     @suppress_errors
     def __init__(self):
         super(LauncherPlugin, self).__init__()
@@ -67,9 +65,9 @@ class LauncherPlugin(tomate.plugin.Plugin):
     @suppress_errors
     @on(Events.Timer, [State.changed])
     def update_progress(self, _, payload: TimerPayload):
-        self.widget.set_property("progress", payload.ratio)
+        self.widget.set_property("progress", payload.elapsed_ratio)
 
-        logger.debug("launcher progress update to %.1f", payload.ratio)
+        logger.debug("launcher progress update to %.1f", payload.elapsed_ratio)
 
     def enable_counter(self):
         self.widget.set_property("count_visible", True)

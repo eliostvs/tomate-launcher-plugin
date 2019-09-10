@@ -2,11 +2,11 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from tomate.constant import State, Sessions
-from tomate.event import Events
-from tomate.graph import graph
-from tomate.session import Session, SessionPayload, FinishedSession
-from tomate.timer import TimerPayload
+from tomate.pomodoro import State, Sessions
+from tomate.pomodoro.event import Events
+from tomate.pomodoro.graph import graph
+from tomate.pomodoro.session import Session, SessionPayload, FinishedSession
+from tomate.pomodoro.timer import TimerPayload
 
 
 def setup_function(function):
@@ -28,7 +28,7 @@ def plugin(launcher_entry):
 
 @patch("gi.repository.Unity.LauncherEntry")
 def test_get_tomate_desktop_id(launcher_entry, mocker):
-    graph.register_instance("tomate.session", mocker.Mock(Session))
+    graph.register_instance("tomate.pomodoro.session", mocker.Mock(Session))
 
     from launcher_plugin import LauncherPlugin
 
