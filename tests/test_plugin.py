@@ -58,7 +58,7 @@ def test_deactivate_plugin(subject):
     assert subject.widget.get_progress_visible() is False
 
 
-def test_enable_progress_when_session_starts(session, subject):
+def test_enable_progress_when_session_start(session, subject):
     subject.activate()
 
     Events.Session.send(State.started)
@@ -69,7 +69,7 @@ def test_enable_progress_when_session_starts(session, subject):
 
 
 @pytest.mark.parametrize("event", [State.finished, State.stopped])
-def test_show_counter_when_session_stops(event, subject):
+def test_show_counter_when_session_stop(event, subject):
     subject.activate()
 
     payload = SessionPayload(
@@ -87,7 +87,7 @@ def test_show_counter_when_session_stops(event, subject):
     assert subject.widget.get_count() == 4
 
 
-def test_update_progress_when_timer_changes(session, subject):
+def test_update_progress_when_timer_change(session, subject):
     subject.activate()
 
     payload = TimerPayload(time_left=5, duration=10)
@@ -96,7 +96,7 @@ def test_update_progress_when_timer_changes(session, subject):
     assert subject.widget.get_progress() == 0.5
 
 
-def test_reset_counter_when_session_resets(subject):
+def test_reset_counter_when_session_reset(subject):
     subject.activate()
     subject.widget.set_count(4)
 
