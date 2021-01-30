@@ -1,17 +1,16 @@
 import logging
 
 import gi
-
-gi.require_version("Unity", "7.0")
-
 from gi.repository import Unity
 
 from tomate.pomodoro import State
 from tomate.pomodoro.event import Events, on
 from tomate.pomodoro.graph import graph
 from tomate.pomodoro.plugin import suppress_errors, Plugin
-from tomate.pomodoro.session import SessionPayload, Session
-from tomate.pomodoro.timer import TimerPayload
+from tomate.pomodoro.session import Payload as SessionPayload
+from tomate.pomodoro.timer import Payload as TimerPayload
+
+gi.require_version("Unity", "7.0")
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +27,12 @@ class LauncherPlugin(Plugin):
     def activate(self):
         super(LauncherPlugin, self).activate()
 
-        if self.session.state is State.started:
+        if self.session.is_running():
             self.enable_progress()
-
+            self.disable_counter()
         else:
             self.enable_counter()
-            self.update_counter(len(Session.finished_pomodoros(self.session.sessions)))
+            self.update_counter(self.session.pomodoros)
 
     @suppress_errors
     def deactivate(self):
@@ -42,25 +41,31 @@ class LauncherPlugin(Plugin):
         self.disable_counter()
         self.disable_progress()
 
+    def disable_counter(self):
+        self.widget.set_property("count_visible", False)
+
     @suppress_errors
     @on(Events.Session, [State.started])
     def on_session_started(self, *args, **kwargs):
         self.disable_counter()
         self.enable_progress()
 
+    def enable_progress(self):
+        self.widget.set_property("progress", 0)
+        self.widget.set_property("progress_visible", True)
+
     @suppress_errors
     @on(Events.Session, [State.finished, State.stopped])
     def on_session_ended(self, *args, payload: SessionPayload):
         self.disable_progress()
         self.enable_counter()
-        self.update_counter(len(payload.finished_pomodoros))
-
-    def enable_progress(self):
-        self.widget.set_property("progress", 0)
-        self.widget.set_property("progress_visible", True)
+        self.update_counter(payload.pomodoros)
 
     def disable_progress(self):
         self.widget.set_property("progress_visible", False)
+
+    def enable_counter(self):
+        self.widget.set_property("count_visible", True)
 
     @suppress_errors
     @on(Events.Timer, [State.changed])
@@ -69,18 +74,12 @@ class LauncherPlugin(Plugin):
 
         logger.debug("launcher progress update to %.1f", payload.elapsed_ratio)
 
-    def enable_counter(self):
-        self.widget.set_property("count_visible", True)
-
-    def disable_counter(self):
-        self.widget.set_property("count_visible", False)
+    @suppress_errors
+    @on(Events.Session, [State.reset])
+    def reset_counter(self, *args, **kwargs):
+        self.update_counter(0)
 
     def update_counter(self, count: int):
         self.widget.set_property("count", count)
 
         logger.debug("launcher count updated to %d", count)
-
-    @suppress_errors
-    @on(Events.Session, [State.reset])
-    def update_count(self, _, payload: SessionPayload):
-        self.update_counter(len(payload.finished_pomodoros))
