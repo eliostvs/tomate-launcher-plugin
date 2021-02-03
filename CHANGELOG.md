@@ -1,28 +1,46 @@
-### [Unreleased]
+# Changelog
 
-#### Changed
+All notable changes to this project will be documented in this file.
 
-- Using new core API
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### 0.8.0
+## [Unreleased]
 
-#### Changed
+### Changed
 
-- The timer, session and settings now emit a payload object instead of a dictionary
+- New tomate API
 
-### 0.7.0
+## 0.8.0
 
-- Python 3 only
+### Changed
 
-### 0.6.0
+- New tomate API
+
+## 0.7.0
+
+### Removed
+
+- Python 2 support
+
+## 0.6.0
+
+### Added
 
 - Using py.test
-- Fix gtk warnings
+  
+### Removed
 
-### 0.5.0
+- Gtk warnings
 
-- Remove linux package metadata
+## 0.5.0
+
+### Removed
+
+- Linux package metadata
 
 ### 0.4.0
 
-- Using the new event system
+### Changed
+
+- New tomate API
