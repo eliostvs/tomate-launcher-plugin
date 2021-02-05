@@ -7,7 +7,7 @@ PLUGINPATH   = $(CURDIR)/data/plugins
 PYTHONPATH   = PYTHONPATH=$(CURDIR)/tomate:$(PLUGINPATH)
 VERSION      = `cat .bumpversion.cfg | grep current_version | awk '{print $$3}'`
 WORKDIR 	   = /code
-XDGPATHS     = XDG_DATA_HOME=$(CURDIR)/tests/data XDG_DATA_DIRS=/usr/local/share:/usr/share
+XDGPATH      = XDG_DATA_HOME=$(CURDIR)/tests/data XDG_DATA_DIRS=/usr/local/share:/usr/share
 
 format:
 	black data/plugins/
