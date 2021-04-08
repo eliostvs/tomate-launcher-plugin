@@ -20,7 +20,7 @@ class LauncherPlugin(plugin.Plugin):
     @suppress_errors
     def __init__(self):
         super(LauncherPlugin, self).__init__()
-        self.widget = Unity.LauncherEntry.get_for_desktop_id("tomate-gtk.desktop")
+        self.launcher = Unity.LauncherEntry.get_for_desktop_id("tomate-gtk.desktop")
         self.session = graph.get("tomate.session")
 
     @suppress_errors
@@ -42,7 +42,7 @@ class LauncherPlugin(plugin.Plugin):
 
     def disable_counter(self):
         logger.debug("action=disable_counter")
-        self.widget.set_property("count_visible", False)
+        self.launcher.set_property("count_visible", False)
 
     @suppress_errors
     @on(Events.SESSION_START)
@@ -52,8 +52,8 @@ class LauncherPlugin(plugin.Plugin):
 
     def enable_progress(self):
         logger.debug("action=enable_progress")
-        self.widget.set_property("progress", 0)
-        self.widget.set_property("progress_visible", True)
+        self.launcher.set_property("progress", 0)
+        self.launcher.set_property("progress_visible", True)
 
     @suppress_errors
     @on(Events.SESSION_END, Events.SESSION_INTERRUPT)
@@ -64,17 +64,17 @@ class LauncherPlugin(plugin.Plugin):
 
     def disable_progress(self):
         logger.debug("action=disable_progress")
-        self.widget.set_property("progress_visible", False)
+        self.launcher.set_property("progress_visible", False)
 
     def enable_counter(self):
         logger.debug("action=enable_counter")
-        self.widget.set_property("count_visible", True)
+        self.launcher.set_property("count_visible", True)
 
     @suppress_errors
     @on(Events.TIMER_UPDATE)
     def update_progress(self, _, payload: TimerPayload):
         logger.debug("action=update progress=%.1f", payload.elapsed_ratio)
-        self.widget.set_property("progress", payload.elapsed_ratio)
+        self.launcher.set_property("progress", payload.elapsed_ratio)
 
     @suppress_errors
     @on(Events.SESSION_RESET)
@@ -83,4 +83,4 @@ class LauncherPlugin(plugin.Plugin):
 
     def update_counter(self, count: int):
         logger.debug("action=update counter=%d", count)
-        self.widget.set_property("count", count)
+        self.launcher.set_property("count", count)

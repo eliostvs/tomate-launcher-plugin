@@ -34,31 +34,31 @@ def test_active_plugin_when_session_is_not_running(session, subject):
 
     subject.activate()
 
-    assert subject.widget.get_progress_visible() is False
-    assert subject.widget.get_count_visible() is True
-    assert subject.widget.get_count() == 5
+    assert subject.launcher.get_progress_visible() is False
+    assert subject.launcher.get_count_visible() is True
+    assert subject.launcher.get_count() == 5
 
 
 def test_active_plugin_when_session_is_running(session, subject):
     session.is_running.return_value = True
-    subject.widget.set_count_visible(True)
-    subject.widget.set_progress_visible(False)
+    subject.launcher.set_count_visible(True)
+    subject.launcher.set_progress_visible(False)
 
     subject.activate()
 
-    assert subject.widget.get_count_visible() is False
-    assert subject.widget.get_progress_visible() is True
-    assert subject.widget.get_progress() == 0.0
+    assert subject.launcher.get_count_visible() is False
+    assert subject.launcher.get_progress_visible() is True
+    assert subject.launcher.get_progress() == 0.0
 
 
 def test_deactivate_plugin(subject):
-    subject.widget.set_count_visible(True)
-    subject.widget.set_progress_visible(True)
+    subject.launcher.set_count_visible(True)
+    subject.launcher.set_progress_visible(True)
 
     subject.deactivate()
 
-    assert subject.widget.get_count_visible() is False
-    assert subject.widget.get_progress_visible() is False
+    assert subject.launcher.get_count_visible() is False
+    assert subject.launcher.get_progress_visible() is False
 
 
 def test_enable_progress_when_session_start(bus, session, subject):
@@ -66,9 +66,9 @@ def test_enable_progress_when_session_start(bus, session, subject):
 
     bus.send(Events.SESSION_START)
 
-    assert subject.widget.get_progress_visible() is True
-    assert subject.widget.get_progress() == 0.0
-    assert subject.widget.get_count_visible() is False
+    assert subject.launcher.get_progress_visible() is True
+    assert subject.launcher.get_progress() == 0.0
+    assert subject.launcher.get_count_visible() is False
 
 
 @pytest.mark.parametrize("event", [Events.SESSION_END, Events.SESSION_INTERRUPT])
@@ -83,9 +83,9 @@ def test_show_counter_when_session_stop(event, bus, subject):
     )
     bus.send(event, payload=payload)
 
-    assert subject.widget.get_progress_visible() is False
-    assert subject.widget.get_count_visible() is True
-    assert subject.widget.get_count() == 4
+    assert subject.launcher.get_progress_visible() is False
+    assert subject.launcher.get_count_visible() is True
+    assert subject.launcher.get_count() == 4
 
 
 def test_updates_progress_when_timer_change(bus, session, subject):
@@ -93,13 +93,13 @@ def test_updates_progress_when_timer_change(bus, session, subject):
 
     bus.send(Events.TIMER_UPDATE, payload=TimerPayload(time_left=5, duration=10))
 
-    assert subject.widget.get_progress() == 0.5
+    assert subject.launcher.get_progress() == 0.5
 
 
 def test_resets_counter_when_session_reset(bus, subject):
     subject.activate()
-    subject.widget.set_count(4)
+    subject.launcher.set_count(4)
 
     bus.send(Events.SESSION_RESET)
 
-    assert subject.widget.get_count() == 0
+    assert subject.launcher.get_count() == 0
