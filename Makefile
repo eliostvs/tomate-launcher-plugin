@@ -6,13 +6,13 @@ MAKEFLAGS     += --no-builtin-rules
 MAKEFLAGS     += --warn-undefined-variables
 SHELL         = bash
 
-DEBUG 		   = TOMATE_DEBUG=1
+DEBUG        = TOMATE_DEBUG=1
 DOCKER_IMAGE = eliostvs/tomate
 OBS_API_URL  = https://api.opensuse.org/trigger/runservice
 PLUGINPATH   = $(CURDIR)/data/plugins
 PYTHONPATH   = PYTHONPATH=$(CURDIR)/tomate:$(PLUGINPATH)
 VERSION      = `cat .bumpversion.cfg | grep current_version | awk '{print $$3}'`
-WORKDIR 	   = /code
+WORKDIR      = /code
 XDGPATH      = XDG_DATA_HOME=$(CURDIR)/tests/data XDG_DATA_DIRS=/usr/local/share:/usr/share
 
 ifeq ($(origin .RECIPEPREFIX), undefined)
