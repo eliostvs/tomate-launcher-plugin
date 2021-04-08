@@ -6,16 +6,17 @@ gi.require_version("Unity", "7.0")
 
 from gi.repository import Unity
 
+import tomate.pomodoro.plugin as plugin
 from tomate.pomodoro.event import Events, on
 from tomate.pomodoro.graph import graph
-from tomate.pomodoro.plugin import Plugin, suppress_errors
+from tomate.pomodoro.plugin import suppress_errors
 from tomate.pomodoro.session import Payload as SessionPayload
 from tomate.pomodoro.timer import Payload as TimerPayload
 
 logger = logging.getLogger(__name__)
 
 
-class LauncherPlugin(Plugin):
+class LauncherPlugin(plugin.Plugin):
     @suppress_errors
     def __init__(self):
         super(LauncherPlugin, self).__init__()
