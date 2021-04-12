@@ -36,7 +36,8 @@ format:
 
 .PHONY: clean
 clean:
-	find . \( -iname "*.pyc" -o -iname "__pycache__" -o -iname ".coverage" -o -iname ".cache" \) -print0 | xargs -0 rm -rf
+	find . \( -iname "__pycache__" \) -print0 | xargs -0 rm -rf
+	rm -rf .eggs *.egg-info/ .coverage build/ .cache .pytest_cache
 
 .PHONY: test
 test: clean
@@ -56,7 +57,7 @@ trigger-build:
 
 .PHONY: docker-test
 docker-test:
-	docker run --rm -v $(CURDIR):/code $(DOCKER_IMAGE) test
+	docker run --rm -v $(CURDIR):/code $(DOCKER_IMAGE)
 
 .PHONY: docker-enter
 docker-enter:
