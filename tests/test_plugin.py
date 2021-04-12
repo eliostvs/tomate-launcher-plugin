@@ -1,15 +1,11 @@
 import pytest
-from blinker import NamedSignal
 
-from tomate.pomodoro.event import Events
-from tomate.pomodoro.graph import graph
-from tomate.pomodoro.session import Payload as SessionPayload, Session, Type as SessionType
-from tomate.pomodoro.timer import Payload as TimerPayload
+from tomate.pomodoro import Bus, Events, Session, SessionPayload, SessionType, TimerPayload, graph
 
 
 @pytest.fixture
-def bus():
-    return NamedSignal("Test")
+def bus() -> Bus:
+    return Bus()
 
 
 @pytest.fixture
@@ -25,7 +21,9 @@ def subject(bus, session):
 
     import launcher_plugin
 
-    return launcher_plugin.LauncherPlugin()
+    instance = launcher_plugin.LauncherPlugin()
+    instance.connect(bus)
+    return instance
 
 
 def test_active_plugin_when_session_is_not_running(session, subject):

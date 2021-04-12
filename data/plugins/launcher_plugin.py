@@ -7,11 +7,7 @@ gi.require_version("Unity", "7.0")
 from gi.repository import Unity
 
 import tomate.pomodoro.plugin as plugin
-from tomate.pomodoro.event import Events, on
-from tomate.pomodoro.graph import graph
-from tomate.pomodoro.plugin import suppress_errors
-from tomate.pomodoro.session import Payload as SessionPayload
-from tomate.pomodoro.timer import Payload as TimerPayload
+from tomate.pomodoro import Events, on, graph, suppress_errors, SessionPayload, TimerPayload
 
 logger = logging.getLogger(__name__)
 
@@ -19,13 +15,13 @@ logger = logging.getLogger(__name__)
 class LauncherPlugin(plugin.Plugin):
     @suppress_errors
     def __init__(self):
-        super(LauncherPlugin, self).__init__()
+        super().__init__()
         self.launcher = Unity.LauncherEntry.get_for_desktop_id("tomate-gtk.desktop")
         self.session = graph.get("tomate.session")
 
     @suppress_errors
     def activate(self):
-        super(LauncherPlugin, self).activate()
+        super().activate()
         if self.session.is_running():
             self.enable_progress()
             self.disable_counter()
@@ -35,7 +31,7 @@ class LauncherPlugin(plugin.Plugin):
 
     @suppress_errors
     def deactivate(self):
-        super(LauncherPlugin, self).deactivate()
+        super().deactivate()
 
         self.disable_counter()
         self.disable_progress()
