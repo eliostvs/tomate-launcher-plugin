@@ -57,7 +57,7 @@ trigger-build:
 
 .PHONY: docker-test
 docker-test:
-	docker run --rm -v $(CURDIR):/code $(DOCKER_IMAGE)
+	docker run --rm -v $(CURDIR):$(WORKDIR) --workdir $(WORKDIR) $(DOCKER_IMAGE) test
 
 .PHONY: docker-enter
 docker-enter:
