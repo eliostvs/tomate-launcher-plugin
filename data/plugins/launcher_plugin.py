@@ -1,13 +1,14 @@
 import logging
 
 import gi
+from wiring import Graph
 
 gi.require_version("Unity", "7.0")
 
 from gi.repository import Unity
 
 import tomate.pomodoro.plugin as plugin
-from tomate.pomodoro import Events, on, graph, suppress_errors, SessionPayload, TimerPayload
+from tomate.pomodoro import Bus, Events, on, suppress_errors, SessionPayload, TimerPayload
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +18,10 @@ class LauncherPlugin(plugin.Plugin):
     def __init__(self):
         super().__init__()
         self.launcher = Unity.LauncherEntry.get_for_desktop_id("tomate-gtk.desktop")
+        self.session = None
+
+    def configure(self, bus: Bus, graph: Graph) -> None:
+        super().configure(bus, graph)
         self.session = graph.get("tomate.session")
 
     @suppress_errors

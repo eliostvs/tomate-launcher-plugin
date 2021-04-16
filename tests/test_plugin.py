@@ -1,6 +1,7 @@
 import pytest
+from wiring import Graph
 
-from tomate.pomodoro import Bus, Events, Session, SessionPayload, SessionType, TimerPayload, graph
+from tomate.pomodoro import Bus, Events, Session, SessionPayload, SessionType, TimerPayload
 
 
 @pytest.fixture
@@ -9,12 +10,19 @@ def bus() -> Bus:
 
 
 @pytest.fixture
+def graph() -> Graph:
+    g = Graph()
+    g.register_instance(Graph, g)
+    return g
+
+
+@pytest.fixture
 def session(mocker):
     return mocker.Mock(spec=Session)
 
 
 @pytest.fixture
-def subject(bus, session):
+def subject(bus, graph, session):
     graph.providers.clear()
     graph.register_instance("tomate.bus", bus)
     graph.register_instance("tomate.session", session)
@@ -22,7 +30,7 @@ def subject(bus, session):
     import launcher_plugin
 
     instance = launcher_plugin.LauncherPlugin()
-    instance.connect(bus)
+    instance.configure(bus, graph)
     return instance
 
 
