@@ -1,47 +1,64 @@
-PACKAGE = tomate-launcher-plugin
-AUTHOR = eliostvs
-PACKAGE_ROOT = $(CURDIR)
-TOMATE_PATH = $(PACKAGE_ROOT)/tomate
-DATA_PATH = $(PACKAGE_ROOT)/data
-PLUGIN_PATH = $(DATA_PATH)/plugins
-PYTHONPATH = PYTHONPATH=$(TOMATE_PATH):$(PLUGIN_PATH)
-DOCKER_IMAGE_NAME = $(AUTHOR)/$(PACKAGE)
-PROJECT = home:eliostvs:tomate
-DEBUG = TOMATE_DEBUG=true
-OBS_API_URL = https://api.opensuse.org/trigger/runservice
-CURRENT_VERSION = `cat .bumpversion.cfg | grep current_version | awk '{print $$3}'`
-WORK_DIR = /code
+ifeq ($(origin .RECIPEPREFIX), undefined)
+	$(error This Make does not support .RECIPEPREFIX. Please use GNU Make 4.0 or later)
+endif
 
+.DELETE_ON_ERROR:
+.ONESHELL:
+.SHELLFLAGS   := -euo pipefail -c
+.SILENT:
+MAKEFLAGS     += --no-builtin-rules
+MAKEFLAGS     += --warn-undefined-variables
+SHELL         = bash
+
+DEBUG        = TOMATE_DEBUG=1
+DOCKER_IMAGE = eliostvs/tomate
+OBS_API_URL  = https://api.opensuse.org/trigger/runservice
+PLUGINPATH   = $(CURDIR)/data/plugins
+PYTHONPATH   = PYTHONPATH=$(CURDIR)/tomate:$(PLUGINPATH)
+VERSION      = `cat .bumpversion.cfg | grep current_version | awk '{print $$3}'`
+WORKDIR      = /code
+XDGPATH      = XDG_DATA_HOME=$(CURDIR)/tests/data XDG_DATA_DIRS=/usr/local/share:/usr/share
+
+ifeq ($(shell which xvfb-run 1> /dev/null && echo yes),yes)
+	ARGS = xvfb-run -a
+else
+	ARGS ?=
+endif
+
+.PHONY: submodule
 submodule:
 	git submodule init;
 	git submodule update;
 
+.PHONY: format
+format:
+	black data/plugins/ tests/
+
+.PHONY: clean
 clean:
-	find . \( -iname "*.pyc" -o -iname "__pycache__" \) -print0 | xargs -0 rm -rf
+	find . \( -iname "__pycache__" \) -print0 | xargs -0 rm -rf
+	rm -rf .eggs *.egg-info/ .coverage build/ .cache .pytest_cache
 
+.PHONY: test
 test: clean
-	$(PYTHONPATH) $(DEBUG) py.test test_plugin.py --cov=$(PLUGIN_PATH)
-
-docker-clean:
-	docker rmi $(DOCKER_IMAGE_NAME) 2> /dev/null || echo $(DOCKER_IMAGE_NAME) not found!
-
-docker-build:
-	docker build -t $(DOCKER_IMAGE_NAME) .
-
-docker-test:
-	docker run --rm -v $(PACKAGE_ROOT):/code $(DOCKER_IMAGE_NAME) test
-
-docker-all: docker-clean docker-build docker-test
-
-docker-enter:
-	docker run --rm -v $(PACKAGE_ROOT):$(WORK_DIR) --workdir $(WORK_DIR) -it --entrypoint="bash" $(DOCKER_IMAGE_NAME)
+	echo "$(DEBUG) $(PYTHONPATH) $(ARGS) py.test $(PYTEST) --cov=$(PLUGINPATH)"
+	$(DEBUG) $(PYTHONPATH) $(ARGS) py.test $(PYTEST) --cov=$(PLUGINPATH)
 
 release-%:
 	git flow init -d
-	@grep -q '\[Unreleased\]' README.md || (echo 'Create the [Unreleased] section in the changelog first!' && exit)
+	@grep -q '\[Unreleased\]' CHANGELOG.md || (echo 'Create the [Unreleased] section in the changelog first!' && exit)
 	bumpversion --verbose --commit $*
-	git flow release start $(CURRENT_VERSION)
-	GIT_MERGE_AUTOEDIT=no git flow release finish -m "Merge branch release/$(CURRENT_VERSION)" -T $(CURRENT_VERSION) $(CURRENT_VERSION)
+	git flow release start $(VERSION)
+	GIT_MERGE_AUTOEDIT=no git flow release finish -m "Merge branch release/$(VERSION)" -T $(VERSION) $(VERSION) -p
 
+.PHONY: trigger-build
 trigger-build:
 	curl -X POST -H "Authorization: Token $(TOKEN)" $(OBS_API_URL)
+
+.PHONY: docker-test
+docker-test:
+	docker run --rm -v $(CURDIR):$(WORKDIR) --workdir $(WORKDIR) $(DOCKER_IMAGE) test
+
+.PHONY: docker-enter
+docker-enter:
+	docker run --rm -v $(CURDIR):$(WORKDIR) --workdir $(WORKDIR) -it --entrypoint="bash" $(DOCKER_IMAGE)

@@ -1,88 +1,87 @@
 import logging
 
 import gi
-
-from tomate.timer import TimerPayload
+from wiring import Graph
 
 gi.require_version("Unity", "7.0")
 
 from gi.repository import Unity
 
-import tomate.plugin
-from tomate.constant import State
-from tomate.event import Events, on
-from tomate.graph import graph
-from tomate.utils import suppress_errors
-from tomate.session import SessionPayload, Session
+import tomate.pomodoro.plugin as plugin
+from tomate.pomodoro import Bus, Events, on, suppress_errors, SessionPayload, TimerPayload
 
 logger = logging.getLogger(__name__)
 
 
-class LauncherPlugin(tomate.plugin.Plugin):
+class LauncherPlugin(plugin.Plugin):
     @suppress_errors
     def __init__(self):
-        super(LauncherPlugin, self).__init__()
+        super().__init__()
+        self.launcher = Unity.LauncherEntry.get_for_desktop_id("tomate-gtk.desktop")
+        self.session = None
 
-        self.widget = Unity.LauncherEntry.get_for_desktop_id("tomate-gtk.desktop")
+    def configure(self, bus: Bus, graph: Graph) -> None:
+        super().configure(bus, graph)
         self.session = graph.get("tomate.session")
 
     @suppress_errors
     def activate(self):
-        super(LauncherPlugin, self).activate()
-
-        if self.session.state is State.started:
+        super().activate()
+        if self.session.is_running():
             self.enable_progress()
-
+            self.disable_counter()
         else:
             self.enable_counter()
-            self.update_counter(len(Session.finished_pomodoros(self.session.sessions)))
+            self.update_counter(self.session.pomodoros)
 
     @suppress_errors
     def deactivate(self):
-        super(LauncherPlugin, self).deactivate()
+        super().deactivate()
 
         self.disable_counter()
         self.disable_progress()
 
+    def disable_counter(self):
+        logger.debug("action=disable_counter")
+        self.launcher.set_property("count_visible", False)
+
     @suppress_errors
-    @on(Events.Session, [State.started])
-    def on_session_started(self, *args, **kwargs):
+    @on(Events.SESSION_START)
+    def on_session_started(self, *_, **__):
         self.disable_counter()
         self.enable_progress()
 
+    def enable_progress(self):
+        logger.debug("action=enable_progress")
+        self.launcher.set_property("progress", 0)
+        self.launcher.set_property("progress_visible", True)
+
     @suppress_errors
-    @on(Events.Session, [State.finished, State.stopped])
-    def on_session_ended(self, *args, payload: SessionPayload):
+    @on(Events.SESSION_END, Events.SESSION_INTERRUPT)
+    def on_session_ended(self, *_, payload: SessionPayload):
         self.disable_progress()
         self.enable_counter()
-        self.update_counter(len(payload.finished_pomodoros))
-
-    def enable_progress(self):
-        self.widget.set_property("progress", 0)
-        self.widget.set_property("progress_visible", True)
+        self.update_counter(payload.pomodoros)
 
     def disable_progress(self):
-        self.widget.set_property("progress_visible", False)
-
-    @suppress_errors
-    @on(Events.Timer, [State.changed])
-    def update_progress(self, _, payload: TimerPayload):
-        self.widget.set_property("progress", payload.ratio)
-
-        logger.debug("launcher progress update to %.1f", payload.ratio)
+        logger.debug("action=disable_progress")
+        self.launcher.set_property("progress_visible", False)
 
     def enable_counter(self):
-        self.widget.set_property("count_visible", True)
-
-    def disable_counter(self):
-        self.widget.set_property("count_visible", False)
-
-    def update_counter(self, count: int):
-        self.widget.set_property("count", count)
-
-        logger.debug("launcher count updated to %d", count)
+        logger.debug("action=enable_counter")
+        self.launcher.set_property("count_visible", True)
 
     @suppress_errors
-    @on(Events.Session, [State.reset])
-    def update_count(self, _, payload: SessionPayload):
-        self.update_counter(len(payload.finished_pomodoros))
+    @on(Events.TIMER_UPDATE)
+    def update_progress(self, _, payload: TimerPayload):
+        logger.debug("action=update progress=%.1f", payload.elapsed_ratio)
+        self.launcher.set_property("progress", payload.elapsed_ratio)
+
+    @suppress_errors
+    @on(Events.SESSION_RESET)
+    def reset_counter(self, *_, **__):
+        self.update_counter(0)
+
+    def update_counter(self, count: int):
+        logger.debug("action=update counter=%d", count)
+        self.launcher.set_property("count", count)
