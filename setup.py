@@ -33,17 +33,17 @@ DATA_FILES = [
     ("share/{pkgname}/plugins", "data/plugins"),
 ]
 
-
 setup(
     author="Elio Esteves Duarte",
     author_email="elio.esteves.duarte@gmail.com",
+    data_files=find_data_files(DATA_FILES, "tomate"),
     description="Tomate plugin that shows the session progress and counter in launcher.",
     include_package_data=True,
     keywords="pomodoro,tomate",
     license="GPL-3",
     long_description=open("README.md").read(),
     name="tomate-launcher-plugin",
-    data_files=find_data_files(DATA_FILES, "tomate"),
+    py_modules=[],
     url="https://github.com/eliostvs/tomate-launcher-plugin",
     version="0.10.0",
     zip_safe=False,
