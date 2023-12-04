@@ -45,6 +45,6 @@ setup(
     name="tomate-launcher-plugin",
     py_modules=[],
     url="https://github.com/eliostvs/tomate-launcher-plugin",
-    version="0.10.0",
+    version="0.10.1",
     zip_safe=False,
 )
